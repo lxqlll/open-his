@@ -148,6 +148,7 @@ public class LoginController {
             });
             return new AjaxResult(HttpStatus.SUCCESS,"获取显示的菜单信息成功",menuTreeVoList);
         }catch (Exception e){
+            log.error("getMenu"+e);
             return new AjaxResult(HttpStatus.ERROR,"系统异常");
         }
     }

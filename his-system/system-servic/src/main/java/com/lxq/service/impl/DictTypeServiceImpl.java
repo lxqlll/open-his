@@ -109,9 +109,9 @@ public class DictTypeServiceImpl implements DictTypeService{
         DictType sysDictType = dictTypeMapper.selectOne(qw);
         //判断是否为空
         if(null!=sysDictType && dictId.longValue()!=sysDictType.getDictId().longValue()){
-            return false; //说明不存在
+            return true; //说明不存在
         }
-        return true; //说明存在
+        return false; //说明存在
     }
 
     @Override
