@@ -1,4 +1,4 @@
-package util;
+package com.lxq.utils;
 
 import com.lxq.domain.User;
 import com.lxq.domian.SimpleUser;
