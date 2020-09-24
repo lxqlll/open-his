@@ -9,9 +9,12 @@ import com.lxq.utils.ShiroSecurityUtils;
 import com.lxq.vo.AjaxResult;
 import com.lxq.vo.DataGridView;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -186,7 +189,7 @@ public class DictTypeController {
      * @return AjaxResult 统一返回类型
      */
     @RequestMapping(value = "/delDictTypeByIds",method = RequestMethod.DELETE)
-    public AjaxResult delDictTypeByIds(@RequestBody Long[] ids){
+    public AjaxResult delDictTypeByIds(@RequestBody @NotEmpty(message = "删除ID不能为空") Long[] ids){
         try{
             this.dictTypeService.deleteDictTypeByIds(ids);
             return new AjaxResult(HttpStatus.SUCCESS,"删除成功");
@@ -207,10 +210,9 @@ public class DictTypeController {
      * @return AjaxResult 统一返回类型
      */
     @RequestMapping(value = "/getDictTypeById/{id}",method = RequestMethod.GET)
-    public AjaxResult selectDictTypeById(@PathVariable Long id){
+    public AjaxResult selectDictTypeById(@PathVariable @Validated @NotNull(message = "字典ID不能不为空") Long id){
         try{
             DictType dictType = this.dictTypeService.selectDictTypeById(id);
-
             return new AjaxResult(HttpStatus.SUCCESS,"查询成功",dictType);
         }catch (Exception e){
             //当前类名
