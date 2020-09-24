@@ -65,6 +65,10 @@ public class DictTypeServiceImpl implements DictTypeService{
          */
         Date endTime = dictTypeDto.getEndTime();
         queryWrapper.le(endTime!=null,DictType.COL_CREATE_TIME,endTime);
+        /**
+         * 创建时间排序
+         */
+        queryWrapper.orderByDesc(DictType.COL_CREATE_TIME);
         //查询数据
         List<DictType>  list = dictTypeMapper.selectPage(page, queryWrapper).getRecords();
         //赋值数据

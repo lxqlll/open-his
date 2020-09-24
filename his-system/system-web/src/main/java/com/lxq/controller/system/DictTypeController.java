@@ -15,9 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @deprecated 数据字典控制层
@@ -226,5 +224,40 @@ public class DictTypeController {
     }
 
 
+    /**
+     * 获取所有的类型
+     * @return AjaxResult 统一返回类型
+     */
+    @GetMapping(value = "/getAllDicType")
+    public AjaxResult getAllDicType(){
+        try{
+            //创建空集合
+            //final List<String> typeList = Collections.emptyList();
+            //查询所有的数据
+            List<DictTypeDto> list = (List<DictTypeDto>)this.dictTypeService.list().getData();
+            //判断是否有数据
+            if(null!=list   && list.size()>0){
+                //创建list集合
+                 List<String>  typeList = new ArrayList<>();
+                //循环添加类型
+                 list.forEach(item ->{
+                    if(null!=item.getDictType() &&  !"".equals(item.getDictType())){
+                        typeList.add(item.getDictType());
+                    }
+                });
+                return new AjaxResult(HttpStatus.SUCCESS,"查询成功",typeList);
+            }else{
+                return new AjaxResult(HttpStatus.SUCCESS,"暂无数据");
+            }
+        }catch (Exception e){
+            //当前类名
+            String calssName = this.getClass().getName();
+            //当前方法名称
+            String ethodName =  Thread.currentThread().getStackTrace()[1].getMethodName();
+            //错误日志
+            log.error(calssName+"/"+ethodName+":"+e);
+            return new AjaxResult(HttpStatus.ERROR,"系统异常");
+        }
+    }
 
 }
