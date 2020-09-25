@@ -161,4 +161,36 @@ public class DictTypeServiceImpl implements DictTypeService{
         DictType dictType = this.dictTypeMapper.selectById(dictId);
         return dictType;
     }
+
+    @Override
+    public Integer selectCount(DictTypeDto dictTypeDto) {
+        //实例化创建QueryWrapper对象
+        QueryWrapper<DictType> queryWrapper = new QueryWrapper<DictType>();
+        /**
+         *   添加条件1 名称
+         */
+        String dictName =  dictTypeDto.getDictName();
+        queryWrapper.like(StringUtils.isNoneBlank(dictName),DictType.COL_DICT_NAME,dictName);
+        /**
+         *   添加条件2 类型
+         */
+        String dictType =  dictTypeDto.getDictType();
+        queryWrapper.like(StringUtils.isNoneBlank(dictType),DictType.COL_DICT_TYPE,dictType);
+        /**
+         *   添加条件3 状态
+         */
+        String status =  dictTypeDto.getStatus();
+        queryWrapper.eq(StringUtils.isNoneBlank(status),DictType.COL_STATUS,status);
+        /**
+         *   添加条件4 大于当前时间
+         */
+        Date beginTime = dictTypeDto.getBeginTime();
+        queryWrapper.ge(beginTime!=null,DictType.COL_CREATE_TIME,beginTime);
+        /**
+         *   添加条件4 小于当前时间
+         */
+        Date endTime = dictTypeDto.getEndTime();
+        queryWrapper.le(endTime!=null,DictType.COL_CREATE_TIME,endTime);
+        return dictTypeMapper.selectCount(queryWrapper);
+    }
 }

@@ -87,6 +87,9 @@ public class DictTypeController {
         try{
             //调用分页方法
             DataGridView dataGridView = this.dictTypeService.listPage(dictTypeDto);
+            dataGridView.setTotal(Long.valueOf(String.valueOf(dictTypeService.selectCount(dictTypeDto))));
+            dictTypeDto.getPageNum();
+            dictTypeDto.getPageSize();
             //调用getResultMap方法获取集合
             return AjaxResult.success("查询成功",getResultMap(dataGridView));
         }catch (Exception e){

@@ -56,4 +56,9 @@ public interface DictTypeService {
      */
     DictType selectDictTypeById(Long dictId);
 
+    /**
+     * 总条数
+     */
+    Integer selectCount(DictTypeDto dictTypeDto);
+
 }
