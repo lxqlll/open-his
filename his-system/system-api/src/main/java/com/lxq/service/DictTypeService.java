@@ -59,6 +59,6 @@ public interface DictTypeService {
     /**
      * 总条数
      */
-    Integer selectCount(DictTypeDto dictTypeDto);
+    //Integer selectCount(DictTypeDto dictTypeDto);
 
 }

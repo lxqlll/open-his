@@ -9,16 +9,16 @@ import com.lxq.utils.ShiroSecurityUtils;
 import com.lxq.vo.AjaxResult;
 import com.lxq.vo.DataGridView;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
- * @deprecated 数据字典控制层
+ * @description 数据字典控制层
  * @author lxq
  * @date 二〇二〇年九月二十三日 15:28:03
  * @version 1.0
@@ -41,7 +41,7 @@ public class DictTypeController {
      * 说明：创建Map会消耗一定的空间
      * 定义全局变量遇到过数据还是保留上次数据问题，特意写了getResultMap方法
      */
-    Map<String,Object> resultMap = Collections.emptyMap();
+   /* Map<String,Object> resultMap = Collections.emptyMap();
     public Map<String,Object> getResultMap(Object obejct){
         //实例化创建LinkedHashMap集合
         resultMap = new LinkedHashMap<String,Object>(2);
@@ -60,21 +60,9 @@ public class DictTypeController {
         }
         return resultMap;
     }
+*/
 
 
-
-     /*try{
-
-    }catch (Exception e){
-        //当前类名
-        String calssName = this.getClass().getName();
-        //当前方法名称
-        String ethodName =  Thread.currentThread().getStackTrace()[1].getMethodName();
-        //错误日志
-        log.error(calssName+"/"+ethodName+":"+e);
-
-        return new AjaxResult(HttpStatus.ERROR,"系统异常");
-    }*/
 
 
     /**
@@ -87,11 +75,8 @@ public class DictTypeController {
         try{
             //调用分页方法
             DataGridView dataGridView = this.dictTypeService.listPage(dictTypeDto);
-            dataGridView.setTotal(Long.valueOf(String.valueOf(dictTypeService.selectCount(dictTypeDto))));
-            dictTypeDto.getPageNum();
-            dictTypeDto.getPageSize();
-            //调用getResultMap方法获取集合
-            return AjaxResult.success("查询成功",getResultMap(dataGridView));
+
+            return AjaxResult.success("查询成功",dataGridView);
         }catch (Exception e){
             //当前类名
             String calssName = this.getClass().getName();
@@ -115,9 +100,17 @@ public class DictTypeController {
             if(this.dictTypeService.checkDictTypeUnique(dictTypeDto.getDictId(),dictTypeDto.getDictType())) {
                 return AjaxResult.fail("新增数据字典[" + dictTypeDto.getDictName() + "]失败，数据类型已经存在");
             }else{
+                //设置新增人
                 dictTypeDto.setSimpleUser(ShiroSecurityUtils.getCurrentSimpleUser());
-                dictTypeService.insert(dictTypeDto);
-                return  new AjaxResult(HttpStatus.SUCCESS,"新增成功");
+                //声明AjaxResult对象
+                AjaxResult ajaxResult = null;
+                //判断
+                if(dictTypeService.insert(dictTypeDto) == 1){
+                    ajaxResult = new AjaxResult(HttpStatus.SUCCESS,"新增成功");
+                }else{
+                    ajaxResult = new AjaxResult(HttpStatus.ERROR,"新增失败");
+                }
+                return ajaxResult;
             }
         }catch (Exception e){
             //当前类名
@@ -138,7 +131,7 @@ public class DictTypeController {
     public AjaxResult list(){
         try{
             DataGridView dataGridView = this.dictTypeService.list();
-            return new AjaxResult(HttpStatus.SUCCESS,"查询成功",getResultMap(dataGridView));
+            return new AjaxResult(HttpStatus.SUCCESS,"查询成功",dataGridView);
         }catch (Exception e){
             //当前类名
             String calssName = this.getClass().getName();
@@ -237,7 +230,7 @@ public class DictTypeController {
             //创建空集合
             //final List<String> typeList = Collections.emptyList();
             //查询所有的数据
-            List<DictTypeDto> list = (List<DictTypeDto>)this.dictTypeService.list().getData();
+            List<DictType> list = (List<DictType>)this.dictTypeService.list().getData();
             //判断是否有数据
             if(null!=list   && list.size()>0){
                 //创建list集合

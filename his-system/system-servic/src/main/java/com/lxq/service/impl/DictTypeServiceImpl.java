@@ -79,17 +79,16 @@ public class DictTypeServiceImpl implements DictTypeService{
     }
 
     @Override
-    public DataGridView list() throws Exception {
+    public DataGridView list()  {
         //实例化创建QueryWrapper对象
         QueryWrapper<DictType> queryWrapper = new QueryWrapper<>();
         //添加条件2 类型 状态（0正常 1停用）
         queryWrapper.eq(DictType.COL_STATUS,0);
         //查询
         List<DictType> dictTypeList = dictTypeMapper.selectList(queryWrapper);
-        //数据为空抛出异常
-        if(null==dictTypeList) throw new Exception("数据为空");
+
         //实例化创DictTypeDto类型List集合
-        List<DictTypeDto> dictTypeDtoList = new ArrayList<>();
+       /* List<DictTypeDto> dictTypeDtoList = new ArrayList<>();
         //循环切换数据
         dictTypeList.forEach(item->{
             //实例化创建DictTypeDto对象
@@ -97,8 +96,8 @@ public class DictTypeServiceImpl implements DictTypeService{
             //数据实体传输
             BeanUtils.copyProperties(item, dictTypeDto);
             dictTypeDtoList.add(dictTypeDto);
-        });
-        return new DataGridView(Long.valueOf(dictTypeDtoList.size()),dictTypeDtoList);
+        });*/
+        return new DataGridView(null,dictTypeList);
     }
 
     @Override
@@ -141,7 +140,7 @@ public class DictTypeServiceImpl implements DictTypeService{
         BeanUtils.copyProperties(dictTypeDto, dictType);
         //创建者
         dictType.setCreateBy(dictTypeDto.getSimpleUser().getUserName());
-        //新增
+        //修改
         int result = this.dictTypeMapper.updateById(dictType);
         return result;
     }
@@ -162,35 +161,36 @@ public class DictTypeServiceImpl implements DictTypeService{
         return dictType;
     }
 
-    @Override
+    /*@Override
     public Integer selectCount(DictTypeDto dictTypeDto) {
         //实例化创建QueryWrapper对象
         QueryWrapper<DictType> queryWrapper = new QueryWrapper<DictType>();
-        /**
+        *//**
          *   添加条件1 名称
-         */
+         *//*
         String dictName =  dictTypeDto.getDictName();
         queryWrapper.like(StringUtils.isNoneBlank(dictName),DictType.COL_DICT_NAME,dictName);
-        /**
+        *//**
          *   添加条件2 类型
-         */
+         *//*
         String dictType =  dictTypeDto.getDictType();
         queryWrapper.like(StringUtils.isNoneBlank(dictType),DictType.COL_DICT_TYPE,dictType);
-        /**
+        *//**
          *   添加条件3 状态
-         */
+         *//*
         String status =  dictTypeDto.getStatus();
         queryWrapper.eq(StringUtils.isNoneBlank(status),DictType.COL_STATUS,status);
-        /**
+        *//**
          *   添加条件4 大于当前时间
-         */
+         *//*
         Date beginTime = dictTypeDto.getBeginTime();
         queryWrapper.ge(beginTime!=null,DictType.COL_CREATE_TIME,beginTime);
-        /**
+        *//**
          *   添加条件4 小于当前时间
-         */
+         *//*
         Date endTime = dictTypeDto.getEndTime();
         queryWrapper.le(endTime!=null,DictType.COL_CREATE_TIME,endTime);
         return dictTypeMapper.selectCount(queryWrapper);
-    }
+    }*/
+
 }
