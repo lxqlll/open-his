@@ -94,7 +94,7 @@ public class DictTypeController {
      * @return AjaxResult 统一返回类型
      */
     @RequestMapping(value = "/addDictType",method = RequestMethod.POST)
-    public AjaxResult addDictType(@RequestBody DictTypeDto dictTypeDto){
+    public AjaxResult addDictType(@RequestBody @Validated DictTypeDto dictTypeDto){
         try{
             //检查字典类型是否存在 类型 名称
             if(this.dictTypeService.checkDictTypeUnique(dictTypeDto.getDictId(),dictTypeDto.getDictType())) {
@@ -149,7 +149,7 @@ public class DictTypeController {
      * @return AjaxResult 统一返回类型
      */
     @RequestMapping(value = "/updateDictType",method = RequestMethod.PUT)
-    public AjaxResult updateDictType(@RequestBody DictTypeDto dictTypeDto){
+    public AjaxResult updateDictType(@RequestBody @Validated DictTypeDto dictTypeDto){
         try{
             //编号
             long id = dictTypeDto.getDictId();
