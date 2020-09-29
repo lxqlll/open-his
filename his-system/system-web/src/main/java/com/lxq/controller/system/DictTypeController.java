@@ -1,6 +1,5 @@
 package com.lxq.controller.system;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxq.constants.HttpStatus;
 import com.lxq.domain.DictType;
 import com.lxq.dto.DictTypeDto;
