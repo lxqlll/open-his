@@ -68,7 +68,6 @@ public class DictDataServiceImpl implements DictDataService {
         DictData dictData = new DictData();
         //copy
         BeanUtils.copyProperties(dictDataDto,dictData);
-
         return dictDataMapper.insert(dictData);
     }
 
@@ -98,7 +97,7 @@ public class DictDataServiceImpl implements DictDataService {
         queryWrapper.eq(
                 StringUtils.isNotBlank(dictType),
                 DictData.COL_STATUS,
-                Constants.STATUS_FALSE
+                Constants.STATUS_TRUE
         );
         return dictDataMapper.selectList(queryWrapper);
     }
@@ -108,7 +107,7 @@ public class DictDataServiceImpl implements DictDataService {
         //实例化创建QueryWrapper对象
         QueryWrapper<DictData> queryWrapper = new QueryWrapper<>();
         //eq
-        queryWrapper.eq(dictCode!=null,DictData.COL_DICT_TYPE,dictCode);
+        queryWrapper.eq(dictCode!=null,DictData.COL_DICT_CODE,dictCode);
 
         return dictDataMapper.selectOne(queryWrapper);
     }

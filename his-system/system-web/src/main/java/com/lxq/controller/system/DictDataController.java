@@ -101,6 +101,8 @@ public class DictDataController {
             dictDataDto.setSimpleUser(ShiroSecurityUtils.getCurrentSimpleUser());
             //time
             dictDataDto.setCreateTime(DateUtil.date());
+            //create
+            dictDataDto.setCreateBy(ShiroSecurityUtils.getCurrentUserName());
             //声明AjaxResult对象
             AjaxResult ajaxResult = null;
             //判断
