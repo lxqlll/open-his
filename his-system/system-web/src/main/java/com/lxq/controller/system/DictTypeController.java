@@ -255,4 +255,17 @@ public class DictTypeController {
         }
     }
 
+
+    @GetMapping(value = "dictCacheAsync")
+    public AjaxResult dictCacheAsync(){
+        try{
+            dictTypeService.dictCacheAsync();
+            return AjaxResult.success("同步成功");
+        }catch (Exception e){
+            e.getStackTrace();
+            return AjaxResult.error();
+        }
+    }
+
+
 }

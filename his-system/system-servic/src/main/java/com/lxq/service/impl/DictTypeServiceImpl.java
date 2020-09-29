@@ -1,16 +1,23 @@
 package com.lxq.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lxq.constants.Constants;
+import com.lxq.domain.DictData;
 import com.lxq.domain.DictType;
 import com.lxq.dto.DictTypeDto;
+import com.lxq.mapper.DictDataMapper;
 import com.lxq.mapper.DictTypeMapper;
 import com.lxq.service.DictTypeService;
 import com.lxq.vo.DataGridView;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -26,6 +33,18 @@ public class DictTypeServiceImpl implements DictTypeService{
      */
     @Autowired
     private DictTypeMapper dictTypeMapper;
+
+    /**
+     * 声明DictDataMapper对象
+     */
+    @Autowired
+    private DictDataMapper dictDataMapper;
+
+    /**
+     * spring封装redis对象
+     */
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public DataGridView listPage(DictTypeDto dictTypeDto) {
@@ -158,6 +177,44 @@ public class DictTypeServiceImpl implements DictTypeService{
     public DictType selectDictTypeById(Long dictId) {
         DictType dictType = this.dictTypeMapper.selectById(dictId);
         return dictType;
+    }
+
+    /**
+     * 同步缓存
+     */
+    @Override
+    public void dictCacheAsync() {
+        //实例化创建QueryWrapper对象
+        QueryWrapper<DictType> queryWrapper = new QueryWrapper();
+        //eq
+        queryWrapper.eq(DictType.COL_STATUS, Constants.STATUS_TRUE);
+        //list
+        List<DictType> list = dictTypeMapper.selectList(queryWrapper);
+        //
+        list.forEach(item->{
+            //实例化创建QueryWrapper对象
+            QueryWrapper<DictData> qw = new QueryWrapper<>();
+            //eq
+            qw.eq(
+                    StringUtils.isNotBlank(item.getDictType()),
+                    DictData.COL_DICT_TYPE,
+                    item.getDictType());
+            //eq
+            qw.eq(
+                    DictData.COL_STATUS,
+                    Constants.STATUS_TRUE
+            );
+            //order
+            queryWrapper.orderByDesc(DictData.COL_DICT_SORT);
+            //
+            List<DictData> dictDatas = dictDataMapper.selectList(qw);
+            //转化为String字符串
+            String json = JSON.toJSONString(dictDatas);
+            //redis获取ValueOperations对象
+            ValueOperations<String,String> operations = stringRedisTemplate.opsForValue();
+            //存redis
+            operations.set(Constants.DICT_REDIS_PROFIX+item.getDictType(),json);
+        });
     }
 
     /*@Override

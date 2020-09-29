@@ -57,6 +57,11 @@ public interface DictTypeService {
     DictType selectDictTypeById(Long dictId);
 
     /**
+     * 同步字典数据到缓存
+     */
+    void dictCacheAsync();
+
+    /**
      * 总条数
      */
     //Integer selectCount(DictTypeDto dictTypeDto);

@@ -153,6 +153,8 @@ public class DictDataController {
     public AjaxResult updateDictData(@RequestBody @Validated DictDataDto dictDataDto){
         try{
             dictDataDto.setSimpleUser(ShiroSecurityUtils.getCurrentSimpleUser());
+            //create
+            dictDataDto.setUpdateBy(ShiroSecurityUtils.getCurrentUserName());
             dictDataDto.setUpdateTime(DateUtil.date());
             dictDataService.update(dictDataDto);
             return  new AjaxResult(HttpStatus.SUCCESS,"修改成功");
