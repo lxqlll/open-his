@@ -21,7 +21,7 @@ public interface DictTypeService {
      * 查询所有字典类型
      * @return
      */
-    DataGridView list() throws Exception;
+    DataGridView list() ;
     /**
      * 检查字典类型是否存在
      * @param dictType
