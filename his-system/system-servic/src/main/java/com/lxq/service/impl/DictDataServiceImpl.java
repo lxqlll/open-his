@@ -1,5 +1,7 @@
 package com.lxq.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,15 +13,18 @@ import com.lxq.dto.DictTypeDto;
 import com.lxq.vo.DataGridView;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import com.lxq.mapper.DictDataMapper;
 import com.lxq.service.DictDataService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static javafx.scene.input.KeyCode.L;
 
 @Service
 public class DictDataServiceImpl implements DictDataService {
@@ -29,6 +34,9 @@ public class DictDataServiceImpl implements DictDataService {
      */
     @Resource
     private DictDataMapper dictDataMapper;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public DataGridView listPage(DictDataDto dictDataDto) {
@@ -87,7 +95,7 @@ public class DictDataServiceImpl implements DictDataService {
 
     @Override
     public List<DictData> selectDictDataByDictType(String dictType) {
-        //实例化创建QueryWrapper对象
+      /*  //实例化创建QueryWrapper对象
         QueryWrapper<DictData> queryWrapper = new QueryWrapper<>();
         //eq
         queryWrapper.eq(StringUtils.isNotBlank(dictType),DictData.COL_DICT_TYPE,dictType);
@@ -99,7 +107,19 @@ public class DictDataServiceImpl implements DictDataService {
                 DictData.COL_STATUS,
                 Constants.STATUS_TRUE
         );
-        return dictDataMapper.selectList(queryWrapper);
+        return dictDataMapper.selectList(queryWrapper);*/
+
+        //实例化创建ArrayList集合
+        List<DictData> dictDatas = new ArrayList<>();
+        // redis的存取方式 dict:type
+        String key = Constants.DICT_REDIS_PROFIX+dictType;
+        //获取ValueOperations对象
+        ValueOperations<String,String> valueOperations = stringRedisTemplate.opsForValue();
+        //redis查询
+        String str = valueOperations.get(key);
+        //json转对象
+        dictDatas = JSON.parseArray(str,DictData.class);
+        return dictDatas;
     }
 
     @Override

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,8 +70,8 @@ public class DictDataController {
      * @param DictDataDto 字典数据输出对象
      * @return AjaxResult 统一返回类型
      */
-    @RequestMapping(value = "/pageForList",method = RequestMethod.POST)
-    public AjaxResult pageForList(@RequestBody DictDataDto DictDataDto){
+    @RequestMapping(value = "/listForPage",method = RequestMethod.POST)
+    public AjaxResult listForPage(@RequestBody DictDataDto DictDataDto){
         try{
             //调用分页方法
             DataGridView dataGridView = this.dictDataService.listPage(DictDataDto);
@@ -211,4 +210,6 @@ public class DictDataController {
             return new AjaxResult(HttpStatus.ERROR,"系统异常");
         }
     }
+
+
 }

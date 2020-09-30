@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -69,8 +71,8 @@ public class DictTypeController {
      * @param dictTypeDto 字典数据输出对象
      * @return AjaxResult 统一返回类型
      */
-    @RequestMapping(value = "/pageForList",method = RequestMethod.POST)
-    public AjaxResult pageForList(@RequestBody DictTypeDto dictTypeDto){
+    @RequestMapping(value = "/listForPage",method = RequestMethod.POST)
+    public AjaxResult listForPage(@RequestBody DictTypeDto dictTypeDto){
         try{
             //调用分页方法
             DataGridView dataGridView = this.dictTypeService.listPage(dictTypeDto);
@@ -266,6 +268,4 @@ public class DictTypeController {
             return AjaxResult.error();
         }
     }
-
-
 }
